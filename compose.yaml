@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: kompas_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kompas_db
+      POSTGRES_USER: kompas_user
+      POSTGRES_PASSWORD: kompas_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kompas_net
+
+networks:
+  kompas_net:
+
+volumes:
+  postgres_data:
