@@ -16,6 +16,21 @@ services:
     networks:
       - kompas_net
 
+  backend:
+    build: .
+    container_name: kompas_backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kompas_db
+      SPRING_DATASOURCE_USERNAME: kompas_user
+      SPRING_DATASOURCE_PASSWORD: kompas_password
+    depends_on:
+      - db
+    networks:
+      - kompas_net
+
 networks:
   kompas_net:
 
