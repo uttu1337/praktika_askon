@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: you
+      changes:
+        - renameColumn:
+            tableName: users
+            oldColumnName: passwordHash
+            newColumnName: password_hash
+            columnDataType: varchar(255)

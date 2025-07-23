@@ -13,11 +13,6 @@ public class OrganizationMapper {
         return OrganizationResponseDto.builder()
                 .id(entity.getId())
                 .orgName(entity.getOrgName())
-                .version(entity.getVersion())
-                .deleted(entity.getDeleted())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .deletedAt(entity.getDeletedAt())
                 .build();
     }
 

@@ -55,7 +55,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: password_hash
+                  name: passwordHash
                   type: VARCHAR(255)
                   constraints:
                     nullable: false

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -15,9 +14,4 @@ import java.util.UUID;
 public class OrganizationResponseDto {
     private UUID id;
     private String orgName;
-    private Long version;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Boolean deleted;
-    private LocalDateTime deletedAt;
 }
