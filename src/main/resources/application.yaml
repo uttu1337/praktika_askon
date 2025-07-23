@@ -1,9 +1,24 @@
+
+plugin:
+  path: /root/apps/backend/file/test.txt
+
 spring:
   datasource:
     url: jdbc:postgresql://db:5432/kompas_db
     username: kompas_user
     password: kompas_password
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lopnack@gmail.com
+    password: rhaz pzpl rzmp zauk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   liquibase:
     change-log: classpath:db/changelog-master.yaml
