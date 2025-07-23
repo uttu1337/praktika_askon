@@ -13,4 +13,6 @@ public interface UserService {
     UserResponseDto createUser(UserCreateDto dto);
     Optional<UserResponseDto> updateUser(UUID id, UserCreateDto dto);
     void deleteUser(UUID id);
+
+    void purchaseProduct(UserCreateDto dto);
 }

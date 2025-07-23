@@ -5,11 +5,15 @@ import com.example.praktika_askon.dto.user.UserResponseDto;
 import com.example.praktika_askon.mapper.user.UserMapper;
 import com.example.praktika_askon.repository.UserRepository;
 import com.example.praktika_askon.repository.entity.UserEntity;
+import com.example.praktika_askon.service.EmailService;
 import com.example.praktika_askon.service.UserService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +24,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Value("${plugin.path}")
+    private String pluginPath;
+
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     @Override
     public List<UserResponseDto> getAllUsers() {
@@ -36,6 +44,13 @@ public class UserServiceImpl implements UserService {
     public Optional<UserResponseDto> getUserById(UUID id) {
 
         return userRepository.findById(id)
+                .filter(user -> !Boolean.TRUE.equals(user.getDeleted()))
+                .map(UserMapper::toResponseDto);
+    }
+
+    public Optional<UserResponseDto> getUserByLogin(String login) {
+
+        return userRepository.findByLogin(login)
                 .filter(user -> !Boolean.TRUE.equals(user.getDeleted()))
                 .map(UserMapper::toResponseDto);
     }
@@ -77,6 +92,7 @@ public class UserServiceImpl implements UserService {
             }
 
             UserEntity updated = userRepository.save(user);
+
             return UserMapper.toResponseDto(updated);
         });
     }
@@ -87,6 +103,7 @@ public class UserServiceImpl implements UserService {
                 .filter(user -> !Boolean.TRUE.equals(user.getDeleted()));
 
         if (entityOptional.isEmpty()) {
+
             return;
         }
 
@@ -94,5 +111,27 @@ public class UserServiceImpl implements UserService {
         entity.setDeleted(true);
         entity.setDeletedAt(LocalDateTime.now());
         userRepository.save(entity);
+    }
+
+    @Override
+    public void purchaseProduct(UserCreateDto dto) {
+
+        Optional<UserResponseDto> existingUser = getUserByLogin(dto.getLogin());
+
+        UserResponseDto user = existingUser.orElseGet(() -> createUser(dto));
+
+        File pluginFile = new File(pluginPath); // путь до плагина
+        String message = String.format(
+                "Ваши учётные данные:\nЛогин: %s\nПароль: %s\n\nСпасибо за покупку!",
+                user.getLogin(), dto.getPassword()
+        );
+        try {
+
+            emailService.sendEmailWithAttachment(user.getEmail(), "Покупка плагина", message, pluginFile);
+
+        } catch (MessagingException e) {
+
+            throw new RuntimeException(e);
+        }
     }
 }
