@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /home/root/apps/backend/repo/praktika_askon
+            cd /root/apps/backend/repo/praktika_askon
             git pull origin main
             docker compose -f compose.yaml down
             docker compose -f compose.yaml up -d --build
